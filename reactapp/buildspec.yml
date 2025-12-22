@@ -1,0 +1,21 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 003060447871.dkr.ecr.us-east-1.amazonaws.com
+      - echo Determining image tag...
+      - COMMIT_ID=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -b -8)
+  build:
+    commands:
+      - echo Building the Docker image...
+      - docker build -t 003060447871.dkr.ecr.us-east-1.amazonaws.com/reactapp:$COMMIT_ID .
+      
+  post_build:
+    commands:
+      - echo Pushing the Docker image to Amazon ECR...
+      -  docker push 003060447871.dkr.ecr.us-east-1.amazonaws.com/reactapp:$COMMIT_ID
+      - printf '[{"name":"react-app","imageUri":"%s"}]' 003060447871.dkr.ecr.us-east-1.amazonaws.com/reactapp:$COMMIT_ID > imagedefinitions.json
+artifacts:
+    files: imagedefinitions.json
