@@ -1,4 +1,4 @@
-1.	Nestjs application- found Hello world example from Internet\n
+1.	Nestjs application- found Hello world example from Internet
 Jest config has been adjusted to publish test results to AWS Codebuild reports
 Added Dockerfile
 Added buildspec.yml for defining AWS Codebuild project steps
